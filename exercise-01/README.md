@@ -1,4 +1,4 @@
-# Jenkins-2-SL
+# Jenkins-2-SL - Exercise 01
 Jenkins 2 Self learning
 
 ### Installation
