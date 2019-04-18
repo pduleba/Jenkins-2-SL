@@ -46,11 +46,11 @@ node('master-label') {
 
 // parallel integration (ANY NODE - no node specified)
 stage('Parallel Stage') {
-    parallel ls: {
+    parallel Thread1: {
         executeCommand('Thread-1', 'whoami')
-    }, pwd: {
+    }, Thread2: {
         executeCommand('Thread-2', 'whoami')
-    }, whoami: {
+    }, Thread3: {
         executeCommand('Thread-3', 'whoami')
     }
 }
