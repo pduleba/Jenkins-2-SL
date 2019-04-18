@@ -1,3 +1,11 @@
+stage('Manual Stage (flyweight stage)') {
+    // * `flyweight executor` - DO NOT limits available executors - running as separate thread
+    input message: 'Start?',
+            ok: 'Yes.',
+            concurrency: 1
+}
+
+
 // parallel integration (on node labeled `master-label`)
 node('master-label') {
 
@@ -15,9 +23,15 @@ node('master-label') {
         }
     }
 
-    stage('Clean/Install') {
+    stage('Clean/Test') {
         dir(rootPath) {
-            sh label: '', script: "${mavenHome}/bin/mvn clean install -Dmaven.test.skip=true"
+            sh label: '', script: "${mavenHome}/bin/mvn clean test"
+        }
+    }
+
+    stage('Install') {
+        dir(rootPath) {
+            sh label: '', script: "${mavenHome}/bin/mvn install -Dmaven.test.skip=true"
         }
     }
 
@@ -57,11 +71,12 @@ node('windows-label') {
 }
 
 node {
-    stage('Manual Stage') {
-        input message: 'Continue?',
+    stage('Manual Stage (heavyweight stage)') {
+        // * `heavyweight executor` - limits available executors
+        input message: 'Finish?',
                 ok: 'Yes.',
                 concurrency: 1
-        sh 'echo "Manual Step - COMPLETE"'
+        sh 'echo "Heavyweight Stage - COMPLETE"'
     }
 }
 

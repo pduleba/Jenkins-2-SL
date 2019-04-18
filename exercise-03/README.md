@@ -6,6 +6,8 @@ This exercise shows
 * how to do `parallel execution`
 * * `stash`/`unstash` changes
 * how to use `manual stage`
+* * `flyweight executor` - **DO NOT CONSUME** available executors - running as separate thread
+* * `heavyweight executor` - **CONSUME** available executors
 
 
 ### Prerequisites
