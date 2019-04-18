@@ -1,4 +1,4 @@
-stage('Manual Stage (flyweight stage)') {
+stage('Start? (flyweight stage)') {
     // * `flyweight executor` - DO NOT limits available executors - running as separate thread
     input message: 'Start?',
             ok: 'Yes.',
@@ -71,7 +71,7 @@ node('slave-label') {
 }
 
 node {
-    stage('Manual Stage (heavyweight stage)') {
+    stage('Finish? (heavyweight stage)') {
         // * `heavyweight executor` - limits available executors
         input message: 'Finish?',
                 ok: 'Yes.',
