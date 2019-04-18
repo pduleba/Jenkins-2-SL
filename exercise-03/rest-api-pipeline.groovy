@@ -1,8 +1,5 @@
-node {
-
-    stage('Notify') {
-        sendNotification('Started')
-    }
+// parallel integration (on node labeled `master-label`)
+node('master-label') {
 
     def rootPath = 'exercise-03-rest-api-crud/app-rest-api'
     // tool `maven-3.6.1` needs to be defined in Manage Jenkins -> Global tools -> Maven
@@ -18,42 +15,60 @@ node {
         }
     }
 
-    stage('Clean') {
+    stage('Clean/Install') {
         dir(rootPath) {
-            sh label: '', script: "${mavenHome}/bin/mvn clean"
+            sh label: '', script: "${mavenHome}/bin/mvn clean install -Dmaven.test.skip=true"
         }
     }
 
-    stage('Test') {
+    // save data in this node (to be passed between nodes)
+    stage('Stash') {
         dir(rootPath) {
-            sh label: '', script: "${mavenHome}/bin/mvn test"
-        }
-    }
-
-    stage('Install') {
-        dir(rootPath) {
-            sh label: '', script: "${mavenHome}/bin/mvn install -Dmaven.test.skip=true"
-        }
-    }
-
-    stage('Reports') {
-        dir(rootPath) {
-            step([$class: 'JUnitResultArchiver', testResults: 'target/surefire-reports/TEST-*.xml'])
-        }
-    }
-
-    stage('Archive') {
-        dir(rootPath) {
-            archiveArtifacts 'target/*.jar'
+            stash name: 'archive-package',
+                    includes: 'target/*.jar'
         }
     }
 }
 
-def sendNotification(status) {
-    // just log status but it is possible to send e-mail via `emailext` module
-    try {
-        println("""${status}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'""")
-    } catch (all) {
-        println("ERROR :: Unable to send notification")
+// parallel integration (ANY NODE - no node specified)
+stage('Parallel Stage') {
+    parallel ls: {
+        executeCommand('Thread-1', 'whoami')
+    }, pwd: {
+        executeCommand('Thread-2', 'whoami')
+    }, whoami: {
+        executeCommand('Thread-3', 'whoami')
+    }
+}
+
+// forward further execution to node labeled `windows-label`
+node('windows-label') {
+
+    stage('Unstash') {
+        // clean up old data
+        sh 'rm -rf *'
+        // load data passed between nodes (can be the same node as source)
+        unstash 'archive-package'
+    }
+
+    stage('Archive') {
+        archiveArtifacts 'target/*.jar'
+    }
+}
+
+node {
+    stage('Manual Stage') {
+        input message: 'Continue?',
+                ok: 'Yes.',
+                concurrency: 1
+        sh 'echo "Manual Step - COMPLETE"'
+    }
+}
+
+def executeCommand(executionName, command) {
+    // ANY NODE available
+    node {
+        sh "echo ${executionName}"
+        sh command
     }
 }
