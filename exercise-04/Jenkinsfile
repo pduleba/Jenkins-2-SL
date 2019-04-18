@@ -6,7 +6,7 @@ pipeline {
     //-----------------------------------------
 
     // default agent will not be set at global level
-    agent none
+    agent any
 
     parameters {
         // parallel integration (on node labeled `master-label`)
