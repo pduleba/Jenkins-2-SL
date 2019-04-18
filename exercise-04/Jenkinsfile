@@ -5,8 +5,10 @@ pipeline {
     // Declarative Pipeline Steps Reference  :: https://jenkins.io/doc/pipeline/steps/
     //-----------------------------------------
 
-    // default agent will not be set at global level
-    agent any
+    // default agent
+    agent {
+        label 'master-label'
+    }
 
     parameters {
         // parallel integration (on node labeled `master-label`)
