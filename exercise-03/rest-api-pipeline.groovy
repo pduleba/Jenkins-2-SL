@@ -55,8 +55,8 @@ stage('Parallel Stage') {
     }
 }
 
-// forward further execution to node labeled `windows-label`
-node('windows-label') {
+// forward further execution to node labeled `slave-label`
+node('slave-label') {
 
     stage('Unstash') {
         // clean up old data
