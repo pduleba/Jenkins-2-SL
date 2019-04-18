@@ -1,3 +1,8 @@
+//-----------------------------------------
+// Scripted Pipeline Syntax Reference :: https://jenkins.io/doc/book/pipeline/syntax/#scripted-pipeline
+// Scripted Pipeline Steps Reference  :: https://jenkins.io/doc/pipeline/steps/
+//-----------------------------------------
+
 stage('Start? (flyweight stage)') {
     // * `flyweight executor` - DO NOT limits available executors - running as separate thread
     input message: 'Start?',
