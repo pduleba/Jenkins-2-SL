@@ -1,1 +1,1 @@
-docker run -d -p 8080:8080 -p 50000:50000 --name jenkins -v C:/work-pduleba/programs/jenkins:/var/jenkins_home jenkins/jenkins:lts
+docker run -d -p 8080:8080 -p 50000:50000 --name jenkins -v D:/work-pduleba/programs/jenkins:/var/jenkins_home jenkins/jenkins:lts
